@@ -31,10 +31,33 @@ const getUserById = (req, res) => {
     });
 };
 
+const postUser = (req, res)=>{
+  const {firstname, lastname, email, city,language} = req.body
+
+  database
+  .query(
+    "INSERT INTO USERS SET ?", req.body)
+  .then(([result])=>{
+    if(result.affectedRows>0){
+      res
+      .status(201)
+      .send(
+        `Your user is created successfully with id ${result.insertId}`
+      )
+    }else{
+      res
+      .status(403)
+      .send("your request is forbidden")
+    }
+  })
+}
+
+
 
 
 
 module.exports = {
   getUser,
   getUserById,
+  postUser
 };

@@ -36,4 +36,4 @@ app.listen(port, (err) => {
 });
 
 app.post("/api/movies", movieHandlers.postMovie);
-
+app.post("/api/users", usersHandler.postUser);
