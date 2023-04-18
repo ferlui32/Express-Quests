@@ -35,11 +35,16 @@ app.listen(port, (err) => {
   }
 });
 
+const { hashPassword } = require("./auth.js");
+
+app.post("/api/users", hashPassword, usersHandler.postUser);
+app.put("/api/users/:id", hashPassword, usersHandler.updateUser);
+
 app.post("/api/movies", movieHandlers.postMovie);
-app.post("/api/users", usersHandler.postUser);
+// app.post("/api/users", usersHandler.postUser); replaced by the one above (hashPassword)
 
 app.put("/api/movies/:id",movieHandlers.updateMovie)
-app.put("/api/users/:id", usersHandler.updateUser);
+// app.put("/api/users/:id", usersHandler.updateUser);
 
 app.delete("/api/movies/:id",movieHandlers.deleteMovie)
 app.delete("/api/users/:id",usersHandler.deleteUser)

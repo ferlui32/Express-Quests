@@ -2,7 +2,7 @@ const database = require("./database");
 
 const getUser = (req, res) => {
 
-  let sql="select * from users"
+  let sql="SELECT *, null AS hashedPassword from users"
   const sqlValue=[]
 
   if (req.query.language!=null){
@@ -36,7 +36,7 @@ const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("select * from users where id = ?", [id])
+    .query("SELECT *, null AS hashedPassword from users where id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.json(users[0]);
@@ -51,9 +51,11 @@ const getUserById = (req, res) => {
 };
 
 const postUser = (req, res) => {
-  const { firstname, lastname, email, city, language } = req.body;
+  // const { firstname, lastname, email, city, language, hashedPassword } = req.body;
 
-  database.query("INSERT INTO USERS SET ?", req.body).then(([result]) => {
+  database
+  .query("INSERT INTO USERS SET ?", req.body)
+  .then(([result]) => {
     if (result.affectedRows > 0) {
       res
         .status(201)
