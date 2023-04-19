@@ -19,11 +19,7 @@ app.get("/", welcome);
 const movieHandlers = require("./movieHandlers");
 const usersHandler = require("./usersHandler")
 
-app.get("/api/movies", movieHandlers.getMovies);
-app.get("/api/movies/:id", movieHandlers.getMovieById);
 
-app.get("/api/users", usersHandler.getUser);
-app.get("/api/users/:id", usersHandler.getUserById)
 
 const database = require("./database");
 
@@ -35,16 +31,29 @@ app.listen(port, (err) => {
   }
 });
 
-const { hashPassword } = require("./auth.js");
+const { hashPassword, verifyPassword, verifyToken } = require("./auth.js");
+// the public routes
+app.get("/api/movies", movieHandlers.getMovies);
+app.get("/api/movies/:id", movieHandlers.getMovieById);
 
+app.get("/api/users", usersHandler.getUser);
+app.get("/api/users/:id", usersHandler.getUserById)
+
+app.post("/api/login", usersHandler.getUserByEmailWithPasswordAndPassToNext,
+verifyPassword
+);
 app.post("/api/users", hashPassword, usersHandler.postUser);
+
+// routes to protect
+app.use(verifyToken)
+
 app.put("/api/users/:id", hashPassword, usersHandler.updateUser);
 
 app.post("/api/movies", movieHandlers.postMovie);
-// app.post("/api/users", usersHandler.postUser); replaced by the one above (hashPassword)
 
 app.put("/api/movies/:id",movieHandlers.updateMovie)
-// app.put("/api/users/:id", usersHandler.updateUser);
 
 app.delete("/api/movies/:id",movieHandlers.deleteMovie)
 app.delete("/api/users/:id",usersHandler.deleteUser)
+
+app.post("/api/movies", movieHandlers.postMovie);
